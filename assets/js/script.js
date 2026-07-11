@@ -69,6 +69,45 @@
       }
     }
 
+    /* Signature cocktails lightbox */
+    var lightbox = document.getElementById("lightbox");
+    if (lightbox) {
+      var lbImg = document.getElementById("lightboxImg");
+      var lbName = document.getElementById("lightboxName");
+      var lbTag = document.getElementById("lightboxTag");
+      var lbClose = document.getElementById("lightboxClose");
+      var lastFocused = null;
+
+      function openLightbox(card) {
+        lastFocused = card;
+        lbImg.src = card.getAttribute("data-img");
+        lbImg.alt = card.getAttribute("data-name") || "";
+        lbName.textContent = card.getAttribute("data-name") || "";
+        lbTag.textContent = card.getAttribute("data-tag") || "";
+        lightbox.classList.add("open");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        lbClose.focus();
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (lastFocused) lastFocused.focus();
+      }
+
+      document.querySelectorAll(".sig-card").forEach(function (card) {
+        card.addEventListener("click", function () { openLightbox(card); });
+      });
+      lbClose.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+      });
+    }
+
     /* Current year in footer */
     var yearEl = document.getElementById("year");
     if (yearEl) yearEl.textContent = new Date().getFullYear();
